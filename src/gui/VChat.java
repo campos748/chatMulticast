@@ -76,21 +76,25 @@ public class VChat {
             @Override
             protected Void call() throws Exception {
 
-                byte[] buffer = new byte[1000];
-                while (true) {  //Bucle infinito a la espera de recepcionar mensajes
+                while (true) {                      //Bucle infinito a la espera de recepcionar mensajes
+                    this.preparePakage();           //Llamo a una funcion para controlar el crecimiento del buffer
+                }
+            }
 
-                    DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);//Preparación del paquete
-                    try {
-                        s.receive(messageIn);                                            //Recepción del mensaje
-                        chat.appendText(new String(messageIn.getData()));                //Se escribe el mensaje en el cuadro
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            private void preparePakage() {
+                byte[] buffer = new byte[1000];
+                DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);//Preparación del paquete
+                try {
+                    s.receive(messageIn);                                            //Recepción del mensaje
+                    chat.appendText(new String(messageIn.getData()));                //Se escribe el mensaje en el cuadro
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         };
 
         (new Thread(tarea)).start(); //Nuevo hilo que ejecuta la tarea
     }
+
 
 }
